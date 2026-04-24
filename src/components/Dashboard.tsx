@@ -32,6 +32,27 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
     setProcessingProgress(0);
   };
 
+  // ✅ ADDED: Build API body from Excel row
+  const buildRequestBody = (data: any) => {
+    return {
+      fromAccountId: data.Loan_Id,
+      fromAccountType: 1,
+      toClientId: 58004,
+      toAccountType: 2,
+      toAccountId: 1,
+      fromAccountTransferActionType: 5,
+      toOfficeId: 1,
+      transferAmount: Number(data.Overpaid_Amount),
+      transferDate: "18 March 2026",
+      transferDescription: "Auto transfer",
+      locale: "en",
+      dateFormat: "dd MMMM yyyy",
+      fromClientId: Number(data.Client_Id),
+      fromOfficeId: Number(data.office_id),
+      savingsTags: []
+    };
+  };
+
   const handleRunProcessing = async () => {
     if (rows.length === 0) {
       alert('Please upload an Excel file first');
@@ -59,31 +80,30 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
       for (let i = 0; i < updatedRows.length; i++) {
         const row = updatedRows[i];
         
-        // Update status to processing
         row.status = 'processing';
         setRows([...updatedRows]);
         setProcessingProgress(Math.round(((i + 1) / updatedRows.length) * 100));
 
         try {
-          // Send the row data to the API with authorization header
-          const response = await axios.post(apiConfig.dataEndpoint, row.data, {
+          // ✅ UPDATED: use mapped request body
+          const requestBody = buildRequestBody(row.data);
+
+          const response = await axios.post(apiConfig.dataEndpoint, requestBody, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-            timeout: 30000, // 30 second timeout per request
+            timeout: 30000,
           });
 
           console.log(`Row ${i + 1} processed successfully:`, response.status);
 
-          // Update with success response
           row.status = 'success';
           row.statusCode = response.status;
           row.response = JSON.stringify(response.data);
         } catch (error: any) {
           console.error(`Row ${i + 1} processing failed:`, error.message);
           
-          // Update with error response
           row.status = 'failure';
           row.statusCode = error.response?.status || 0;
           row.error =
@@ -93,7 +113,6 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
           row.response = JSON.stringify(error.response?.data || {});
         }
 
-        // Update the rows state to show progress
         setRows([...updatedRows]);
       }
     } finally {

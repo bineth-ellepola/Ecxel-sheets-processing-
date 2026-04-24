@@ -13,11 +13,11 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState('');
 
-  // Configuration matching Postman environment variables
+  // ✅ ONLY change: correct API endpoint
   const apiConfig: AppConfig = {
     baseUrl: 'https://sejaya-uat.finflux.io/fineract-provider',
     loginUrl: 'https://sejaya-uat.finflux.io/fineract-provider/api/oauth/token',
-    dataEndpoint: 'https://sejaya-uat.finflux.io/fineract-provider/api/v1/user', // Update this with actual endpoint
+    dataEndpoint: 'https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers',
   };
 
   useEffect(() => {
@@ -30,10 +30,10 @@ function App() {
   }, []);
 
   const handleLoginSuccess = (newToken: string) => {
-    console.log('Login successful. Token:', newToken.substring(0, 20) + '...');
+    console.log('Login successful');
     setToken(newToken);
     setIsLoggedIn(true);
-    // Token is already saved in localStorage by Login component
+    // Token already saved in localStorage by Login component
   };
 
   const handleLogout = () => {
