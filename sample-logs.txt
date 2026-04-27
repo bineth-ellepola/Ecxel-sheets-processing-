@@ -1,0 +1,265 @@
+================================================================================
+                    EXCEL DATA PROCESSOR - SAMPLE LOG FILE
+                           Production Log Session
+                          Date: April 27, 2026
+================================================================================
+
+[LOG] 2:45:00 PM - ============================================================
+[LOG] 2:45:00 PM - APPLICATION STARTED
+[LOG] 2:45:00 PM - Environment: Development
+[LOG] 2:45:00 PM - Server: http://localhost:3001
+[LOG] 2:45:00 PM - React Version: 18.0.0
+[LOG] 2:45:00 PM - Vite Build: Production Ready
+[LOG] 2:45:00 PM - ============================================================
+
+================================================================================
+                            STEP 1: USER LOGIN
+================================================================================
+
+[LOG] 2:45:05 PM - User Login Attempt Initiated
+[LOG] 2:45:05 PM - Username: SMCL-426
+[LOG] 2:45:05 PM - Password: *** (hidden for security)
+
+[LOG] 2:45:06 PM - Sending OAuth Request...
+[LOG] 2:45:06 PM - Endpoint: POST https://sejaya-uat.finflux.io/fineract-provider/api/oauth/token
+[LOG] 2:45:06 PM - Request Headers: {
+  "Content-Type": "application/json",
+  "Accept": "application/json"
+}
+[LOG] 2:45:06 PM - Request Body: {
+  "username": "SMCL-426",
+  "password": "Sejaya@123",
+  "client_id": "community-app",
+  "grant_type": "password",
+  "isPasswordEncrypted": "false"
+}
+
+[LOG] 2:45:07 PM - Response Received: 200 OK
+[LOG] 2:45:07 PM - Response Time: 1.23 seconds
+[LOG] 2:45:07 PM - Access Token: 9efa1a51-7fb7-41cb-aeb8-336b915a0c56
+[LOG] 2:45:07 PM - Token Type: Bearer
+[LOG] 2:45:07 PM - Expires In: 3600 seconds (1 hour)
+
+[LOG] 2:45:07 PM - Token extracted successfully
+[LOG] 2:45:07 PM - Storing token in localStorage...
+[LOG] 2:45:07 PM - localStorage key: 'auth_token'
+[LOG] 2:45:07 PM - ✓ Login Successful!
+[LOG] 2:45:08 PM - Redirecting to Dashboard...
+[LOG] 2:45:08 PM - User: SMCL-426 | Session ID: sess_12345 | Timestamp: 2:45:08 PM
+
+================================================================================
+                          STEP 2: FILE UPLOAD
+================================================================================
+
+[LOG] 2:45:15 PM - File Selection Dialog Opened
+[LOG] 2:45:30 PM - File Selected: sales_data_2026_Q2.xlsx
+[LOG] 2:45:30 PM - File Upload Initiated
+
+[LOG] 2:45:31 PM - File Details:
+  - Name: sales_data_2026_Q2.xlsx
+  - Size: 2.3 MB
+  - Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  - Last Modified: April 26, 2026 11:45:00 PM
+
+[LOG] 2:45:32 PM - Reading Excel file...
+[LOG] 2:45:33 PM - File successfully loaded into memory
+[LOG] 2:45:33 PM - Parsing worksheets...
+
+[LOG] 2:45:34 PM - Worksheets Detected:
+  1. "Sheet1" - 150 rows
+  2. "Sheet2" - 200 rows
+  3. "Summary" - 50 rows
+  4. "Archive" - 500 rows (not processed)
+
+[LOG] 2:45:34 PM - Selected Sheet: Sheet1 (Auto-selected)
+[LOG] 2:45:34 PM - Rows in Sheet1: 150
+[LOG] 2:45:34 PM - Headers (Row 5): [Client_Id, Loan_Id, office_id, Overpaid_Amount]
+
+[LOG] 2:45:35 PM - ✓ File upload complete
+[LOG] 2:45:35 PM - File Status: Ready for Processing
+[LOG] 2:45:35 PM - Displaying 150 rows in table...
+
+================================================================================
+                        STEP 3: DATA PROCESSING
+================================================================================
+
+[LOG] 2:45:40 PM - ============================================================
+[LOG] 2:45:40 PM - BATCH PROCESSING STARTED - 150 rows
+[LOG] 2:45:40 PM - Endpoint: https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers
+[LOG] 2:45:40 PM - User: SMCL-426 | Token: 9efa1a51... | Session: Active
+[LOG] 2:45:40 PM - Start Time: 2:45:40 PM
+[LOG] 2:45:40 PM - Expected Duration: ~3-4 minutes (at ~1.5s per row)
+[LOG] 2:45:40 PM - ============================================================
+
+[LOG] 2:45:41 PM - Row 1/150 Processing...
+[LOG] 2:45:41 PM - Client ID: 179 | Loan ID: LN-123 | Office ID: 4 | Amount: 14.00
+[LOG] 2:45:41 PM - Request attempt 1/3:
+[LOG] 2:45:41 PM - POST https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers
+[LOG] 2:45:41 PM - Authorization: Bearer 9efa1a51-7fb7-41cb...
+[LOG] 2:45:41 PM - Request Body: {
+  "fromAccountId": "179",
+  "fromAccountType": 1,
+  "toClientId": 58004,
+  "toAccountType": 2,
+  "toAccountId": 1,
+  "fromAccountTransferActionType": 5,
+  "toOfficeId": 1,
+  "transferAmount": 14,
+  "transferDate": "27 April 2026",
+  "transferDescription": "Auto transfer",
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy",
+  "fromClientId": 179,
+  "fromOfficeId": 4,
+  "savingsTags": []
+}
+[LOG] 2:45:42 PM - Response: 200 OK
+[LOG] 2:45:42 PM - Response Time: 1.23 seconds
+[LOG] 2:45:42 PM - ✓ SUCCESS - Row 1 transferred ($14.00)
+[LOG] 2:45:42 PM - Response ID: 1001 | Status: completed
+
+[LOG] 2:45:43 PM - Row 2/150 Processing...
+[LOG] 2:45:43 PM - Client ID: 33194 | Loan ID: LN-456 | Office ID: 14 | Amount: 99.98
+[LOG] 2:45:43 PM - ✓ SUCCESS (1.45s) - Row 2 transferred ($99.98)
+[LOG] 2:45:43 PM - Response ID: 1002 | Status: completed
+
+[LOG] 2:45:45 PM - Row 3/150 Processing...
+[LOG] 2:45:45 PM - Client ID: 33253 | Loan ID: LN-789 | Office ID: 5 | Amount: 34.31
+[LOG] 2:45:45 PM - ✓ SUCCESS (1.67s) - Row 3 transferred ($34.31)
+[LOG] 2:45:45 PM - Response ID: 1003 | Status: completed
+
+[LOG] 2:45:47 PM - Row 4/150 Processing...
+[LOG] 2:45:47 PM - Client ID: 45678 | Loan ID: LN-321 | Office ID: 8 | Amount: 50.00
+[LOG] 2:45:47 PM - Request attempt 1/3:
+[LOG] 2:45:48 PM - ✗ FAILED (request timeout after 60s)
+[LOG] 2:45:48 PM - Retry attempt 1/3 - Waiting 1000ms before retry...
+[LOG] 2:45:49 PM - Request attempt 2/3:
+[LOG] 2:45:50 PM - Response: 200 OK
+[LOG] 2:45:50 PM - ✓ SUCCESS (3.21s on 2nd attempt) - Row 4 transferred ($50.00)
+[LOG] 2:45:50 PM - Response ID: 1004 | Status: completed
+
+[LOG] 2:45:52 PM - Row 5/150 Processing...
+[LOG] 2:45:52 PM - Client ID: 55555 | Loan ID: LN-555 | Office ID: 12 | Amount: 75.50
+[LOG] 2:45:52 PM - ✓ SUCCESS (1.34s) - Row 5 transferred ($75.50)
+
+[LOG] 2:45:54 PM - Row 6/150 Processing...
+[LOG] 2:45:54 PM - Client ID: 66666 | Loan ID: LN-666 | Office ID: 3 | Amount: 125.00
+[LOG] 2:45:54 PM - Request attempt 1/3:
+[ERROR] 2:45:55 PM - ✗ FAILED (HTTP 403 Forbidden)
+[ERROR] 2:45:55 PM - Error: Insufficient permissions
+[ERROR] 2:45:55 PM - Response Details: {
+  "httpStatusCode": 403,
+  "developerMessage": "User does not have permission to perform this action",
+  "userMessage": "Insufficient permissions",
+  "globalErrors": []
+}
+[LOG] 2:45:55 PM - Retry attempt 1/3 - Waiting 1000ms...
+[LOG] 2:45:56 PM - Request attempt 2/3:
+[ERROR] 2:45:57 PM - ✗ FAILED (HTTP 403 Forbidden) - Same error
+[LOG] 2:45:57 PM - Retry attempt 2/3 - Waiting 2000ms...
+[LOG] 2:45:59 PM - Request attempt 3/3:
+[ERROR] 2:46:00 PM - ✗ FAILED (HTTP 403 Forbidden) - All retries exhausted
+[ERROR] 2:46:00 PM - Row 6 FAILED - Insufficient permissions (Not retrying - API error, not network error)
+[LOG] 2:46:00 PM - Status: FAILED | Time: 5.23s
+
+[LOG] 2:46:02 PM - Row 7/150 Processing...
+[LOG] 2:46:02 PM - ✓ SUCCESS (1.56s) - Row 7 transferred ($45.75)
+
+[LOG] 2:46:04 PM - Row 8/150 Processing...
+[LOG] 2:46:04 PM - ✓ SUCCESS (1.42s) - Row 8 transferred ($89.99)
+
+[LOG] 2:46:06 PM - Row 9/150 Processing...
+[LOG] 2:46:06 PM - ✓ SUCCESS (1.38s) - Row 9 transferred ($200.00)
+
+[LOG] 2:46:08 PM - Row 10/150 Processing...
+[LOG] 2:46:08 PM - Client ID: 99999 | Loan ID: LN-999 | Office ID: 7 | Amount: 150.25
+[LOG] 2:46:08 PM - Request attempt 1/3:
+[ERROR] 2:46:09 PM - ✗ FAILED (Network timeout)
+[LOG] 2:46:10 PM - Retry attempt 1/3 - Waiting 1000ms...
+[LOG] 2:46:11 PM - Request attempt 2/3:
+[ERROR] 2:46:12 PM - ✗ FAILED (Connection refused)
+[LOG] 2:46:12 PM - Retry attempt 2/3 - Waiting 2000ms...
+[LOG] 2:46:14 PM - Request attempt 3/3:
+[LOG] 2:46:15 PM - Response: 200 OK
+[LOG] 2:46:15 PM - ✓ SUCCESS (6.78s on 3rd attempt) - Row 10 transferred ($150.25)
+
+=== [ROWS 11-145: ALL SUCCESSFUL - Average 1.45s each] ===
+
+[LOG] 2:47:52 PM - Row 146/150 Processing...
+[LOG] 2:47:52 PM - ✓ SUCCESS (1.41s) - Row 146 transferred
+
+[LOG] 2:47:54 PM - Row 147/150 Processing...
+[LOG] 2:47:54 PM - ✓ SUCCESS (1.39s) - Row 147 transferred
+
+[LOG] 2:47:56 PM - Row 148/150 Processing...
+[LOG] 2:47:56 PM - ✓ SUCCESS (1.56s) - Row 148 transferred
+
+[LOG] 2:47:58 PM - Row 149/150 Processing...
+[LOG] 2:47:58 PM - ✓ SUCCESS (1.44s) - Row 149 transferred
+
+[LOG] 2:48:00 PM - Row 150/150 Processing...
+[LOG] 2:48:00 PM - ✓ SUCCESS (1.52s) - Row 150 transferred ($98.50)
+
+[LOG] 2:48:00 PM - ============================================================
+[LOG] 2:48:00 PM - BATCH PROCESSING COMPLETED
+[LOG] 2:48:00 PM - ============================================================
+
+[LOG] 2:48:01 PM - FINAL SUMMARY STATISTICS:
+[LOG] 2:48:01 PM - Total Rows Processed: 150
+[LOG] 2:48:01 PM - ✓ Successful: 148 rows
+[LOG] 2:48:01 PM - ✗ Failed: 2 rows
+[LOG] 2:48:01 PM - ⏳ Processing: 0 rows
+[LOG] 2:48:01 PM - Total Amount Transferred: $7,489.25
+[LOG] 2:48:01 PM - Success Rate: 98.67%
+[LOG] 2:48:01 PM - Failed Rate: 1.33%
+[LOG] 2:48:01 PM - Total Time: 140.32 seconds (2 minutes 20 seconds)
+[LOG] 2:48:01 PM - Average Time per Row: 0.94 seconds
+[LOG] 2:48:01 PM - Start Time: 2:45:40 PM
+[LOG] 2:48:01 PM - End Time: 2:48:00 PM
+
+[LOG] 2:48:02 PM - ============================================================
+[LOG] 2:48:02 PM - Generating detailed error report...
+
+[LOG] 2:48:02 PM - FAILED ROWS REPORT:
+[LOG] 2:48:02 PM - 
+[LOG] 2:48:02 PM - Row 6: Client ID 66666
+[LOG] 2:48:02 PM - Error: HTTP 403 Forbidden
+[LOG] 2:48:02 PM - Reason: Insufficient permissions
+[LOG] 2:48:02 PM - Amount: $125.00
+[LOG] 2:48:02 PM - Retries: 3/3 (all failed)
+[LOG] 2:48:02 PM - Recommendation: Contact admin for permission grant
+[LOG] 2:48:02 PM - 
+[LOG] 2:48:03 PM - Row 25: Client ID 12345
+[LOG] 2:48:03 PM - Error: HTTP 404 Not Found
+[LOG] 2:48:03 PM - Reason: Client does not exist
+[LOG] 2:48:03 PM - Amount: $89.99
+[LOG] 2:48:03 PM - Retries: 3/3 (all failed)
+[LOG] 2:48:03 PM - Recommendation: Verify client ID in Excel file
+
+[LOG] 2:48:04 PM - Results saved to results table
+[LOG] 2:48:04 PM - UI updated with final status
+[LOG] 2:48:05 PM - ✓ Processing complete - Ready for next batch
+
+================================================================================
+                           SESSION INFORMATION
+================================================================================
+
+[LOG] 2:48:05 PM - Session Details:
+[LOG] 2:48:05 PM - User: SMCL-426
+[LOG] 2:48:05 PM - Session Start: 2:45:00 PM
+[LOG] 2:48:05 PM - Session End: 2:48:05 PM
+[LOG] 2:48:05 PM - Total Session Duration: 3 minutes 5 seconds
+[LOG] 2:48:05 PM - Files Processed: 1 (sales_data_2026_Q2.xlsx)
+[LOG] 2:48:05 PM - Total Rows Processed: 150
+[LOG] 2:48:05 PM - Total Amount: $7,489.25
+[LOG] 2:48:05 PM - Success Rate: 98.67%
+
+[LOG] 2:48:05 PM - ============================================================
+[LOG] 2:48:05 PM - SESSION ENDED - USER LOGGED OUT
+[LOG] 2:48:05 PM - Token cleared from localStorage
+[LOG] 2:48:05 PM - ============================================================
+
+================================================================================
+                              END OF LOG FILE
+                         Session completed successfully
+================================================================================
