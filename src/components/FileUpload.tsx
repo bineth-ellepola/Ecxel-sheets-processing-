@@ -70,7 +70,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, isProcessing }) =
           const worksheet = workbook.Sheets[sheetName];
           // Start reading from row 5 (skip first 4 rows) - use header row 5 and data below
           const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
-          range.s.r = 4; // Start from row 5 (0-indexed, so 4 = row 5)
+          range.s.r = 0; // Start from row 5 (0-indexed, so 4 = row 5)
           const jsonData: RowData[] = XLSX.utils.sheet_to_json(worksheet, { range, defval: '' });
 
           if (jsonData.length > 0) {

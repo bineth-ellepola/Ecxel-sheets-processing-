@@ -15,9 +15,9 @@ function App() {
 
   // ✅ ONLY change: correct API endpoint
   const apiConfig: AppConfig = {
-    baseUrl: 'https://sejaya-uat.finflux.io/fineract-provider',
-    loginUrl: 'https://sejaya-uat.finflux.io/fineract-provider/api/oauth/token',
-    dataEndpoint: 'https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers',
+    baseUrl: 'https://sejaya.finflux.io/fineract-provider',
+    loginUrl: 'https://sejaya.finflux.io/fineract-provider/api/oauth/token',
+    dataEndpoint: 'https://sejaya.finflux.io/fineract-provider/api/v1/accounttransfers',
   };
 
   useEffect(() => {

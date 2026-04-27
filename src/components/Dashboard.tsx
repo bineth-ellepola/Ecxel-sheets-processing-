@@ -34,6 +34,13 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
 
   // ✅ ADDED: Build API body from Excel row
   const buildRequestBody = (data: any) => {
+    // Get current date in format "dd MMMM yyyy"
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const monthName = now.toLocaleString('en-US', { month: 'long' });
+    const year = now.getFullYear();
+    const currentDate = `${day} ${monthName} ${year}`;
+
     return {
       fromAccountId: data.Loan_Id,
       fromAccountType: 1,
@@ -43,7 +50,7 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
       fromAccountTransferActionType: 5,
       toOfficeId: 1,
       transferAmount: Number(data.Overpaid_Amount),
-      transferDate: "18 March 2026",
+      transferDate: currentDate,
       transferDescription: "Auto transfer",
       locale: "en",
       dateFormat: "dd MMMM yyyy",
@@ -87,6 +94,11 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
         try {
           // ✅ UPDATED: use mapped request body
           const requestBody = buildRequestBody(row.data);
+          
+          console.log(`\n=== Row ${i + 1} Processing ===`);
+          console.log('Request Body:', requestBody);
+          console.log('Endpoint:', apiConfig.dataEndpoint);
+          console.log('Token:', token.substring(0, 30) + '...');
 
           const response = await axios.post(apiConfig.dataEndpoint, requestBody, {
             headers: {
@@ -96,13 +108,23 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
             timeout: 30000,
           });
 
-          console.log(`Row ${i + 1} processed successfully:`, response.status);
+          console.log(`Row ${i + 1} SUCCESS:`, response.status, response.data);
 
           row.status = 'success';
           row.statusCode = response.status;
           row.response = JSON.stringify(response.data);
         } catch (error: any) {
-          console.error(`Row ${i + 1} processing failed:`, error.message);
+          console.error(`\nRow ${i + 1} FAILED:`, {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            message: error.message,
+            responseData: error.response?.data,
+            config: {
+              url: error.config?.url,
+              method: error.config?.method,
+              headers: error.config?.headers,
+            }
+          });
           
           row.status = 'failure';
           row.statusCode = error.response?.status || 0;
