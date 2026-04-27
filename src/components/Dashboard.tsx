@@ -78,66 +78,121 @@ const Dashboard: React.FC<DashboardProps> = ({ token, apiConfig, onLogout }) => 
 
     setIsProcessing(true);
     const updatedRows = [...rows];
+    const startTime = Date.now();
+    let successCount = 0;
+    let failureCount = 0;
+
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`BATCH PROCESSING STARTED - ${updatedRows.length} rows`);
+    console.log(`Endpoint: ${apiConfig.dataEndpoint}`);
+    console.log(`Start Time: ${new Date().toLocaleTimeString()}`);
+    console.log(`${'='.repeat(60)}\n`);
+
+    // Retry logic with exponential backoff
+    const retryPost = async (
+      url: string,
+      data: any,
+      headers: any,
+      maxRetries = 3
+    ) => {
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          return await axios.post(url, data, {
+            headers,
+            timeout: 60000, // Increased timeout for large files
+          });
+        } catch (error: any) {
+          // If it's a 401 (token expired), throw immediately - don't retry
+          if (error.response?.status === 401) {
+            throw new Error('Token expired - Please log in again');
+          }
+          
+          // For other errors, retry with exponential backoff
+          if (attempt < maxRetries) {
+            const delay = Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s
+            console.log(`  Retry attempt ${attempt}/${maxRetries} - Waiting ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+          } else {
+            throw error;
+          }
+        }
+      }
+    };
 
     try {
-      console.log('Starting data processing...');
-      console.log('Using endpoint:', apiConfig.dataEndpoint);
-      console.log('Token available:', !!token);
-
       for (let i = 0; i < updatedRows.length; i++) {
         const row = updatedRows[i];
-        
+        const rowStartTime = Date.now();
+
         row.status = 'processing';
         setRows([...updatedRows]);
         setProcessingProgress(Math.round(((i + 1) / updatedRows.length) * 100));
 
         try {
-          // ✅ UPDATED: use mapped request body
           const requestBody = buildRequestBody(row.data);
-          
-          console.log(`\n=== Row ${i + 1} Processing ===`);
-          console.log('Request Body:', requestBody);
-          console.log('Endpoint:', apiConfig.dataEndpoint);
-          console.log('Token:', token.substring(0, 30) + '...');
 
-          const response = await axios.post(apiConfig.dataEndpoint, requestBody, {
-            headers: {
+          console.log(`Row ${i + 1}/${updatedRows.length} Processing...`);
+          console.log(`  ClientId: ${requestBody.fromClientId}, Amount: ${requestBody.transferAmount}`);
+
+          const response = await retryPost(
+            apiConfig.dataEndpoint,
+            requestBody,
+            {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
-            },
-            timeout: 30000,
-          });
+            }
+          );
 
-          console.log(`Row ${i + 1} SUCCESS:`, response.status, response.data);
+          const rowDuration = ((Date.now() - rowStartTime) / 1000).toFixed(2);
+          console.log(`  ✓ SUCCESS (${rowDuration}s):`, response?.status);
 
           row.status = 'success';
-          row.statusCode = response.status;
-          row.response = JSON.stringify(response.data);
+          row.statusCode = response?.status || 200;
+          row.response = JSON.stringify(response?.data || {});
+          successCount++;
         } catch (error: any) {
-          console.error(`\nRow ${i + 1} FAILED:`, {
+          const rowDuration = ((Date.now() - rowStartTime) / 1000).toFixed(2);
+
+          if (error.message === 'Token expired - Please log in again') {
+            console.error(`  ✗ TOKEN EXPIRED at row ${i + 1}`);
+            alert('Your session has expired. Please log in again.');
+            handleLogout();
+            break;
+          }
+
+          console.error(`  ✗ FAILED (${rowDuration}s):`, {
             status: error.response?.status,
-            statusText: error.response?.statusText,
             message: error.message,
-            responseData: error.response?.data,
-            config: {
-              url: error.config?.url,
-              method: error.config?.method,
-              headers: error.config?.headers,
-            }
+            response: error.response?.data,
           });
-          
+
           row.status = 'failure';
           row.statusCode = error.response?.status || 0;
           row.error =
             error.response?.data?.message ||
+            error.response?.data?.userMessage ||
             error.message ||
             'Unknown error occurred';
           row.response = JSON.stringify(error.response?.data || {});
+          failureCount++;
         }
 
         setRows([...updatedRows]);
       }
     } finally {
+      const totalDuration = ((Date.now() - startTime) / 1000).toFixed(2);
+      const averageTime = (Number(totalDuration) / updatedRows.length).toFixed(2);
+
+      console.log(`\n${'='.repeat(60)}`);
+      console.log('BATCH PROCESSING COMPLETED');
+      console.log(`Total Rows: ${updatedRows.length}`);
+      console.log(`✓ Success: ${successCount}`);
+      console.log(`✗ Failed: ${failureCount}`);
+      console.log(`Total Time: ${totalDuration}s`);
+      console.log(`Average Time per Row: ${averageTime}s`);
+      console.log(`End Time: ${new Date().toLocaleTimeString()}`);
+      console.log(`${'='.repeat(60)}\n`);
+
       setIsProcessing(false);
     }
   };
