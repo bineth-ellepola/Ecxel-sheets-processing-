@@ -13,7 +13,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState('');
 
-  // ✅ ONLY change: correct API endpoint
+  //  ONLY change: correct API endpoint
   const apiConfig: AppConfig = {
     baseUrl: 'https://sejaya.finflux.io/fineract-provider',
     loginUrl: 'https://sejaya.finflux.io/fineract-provider/api/oauth/token',

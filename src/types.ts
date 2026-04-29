@@ -16,6 +16,7 @@ export interface ProcessedRow {
   statusCode?: number;
   response?: string;
   error?: string;
+  requestBody?: any;
 }
 
 export interface ApiResponse {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { storeCredentials } from '../utils/authManager';
 import type { LoginCredentials } from '../types';
 import '../styles/Login.css';
 
@@ -15,7 +16,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,14 +32,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
     setError('');
 
     try {
-      // If using demo mode, skip actual API call
-      if (showDemo) {
-        const demoToken = 'demo-token-' + Date.now();
-        localStorage.setItem('authToken', demoToken);
-        onLoginSuccess(demoToken);
-        return;
-      }
-
       // Prepare OAuth request payload
       const oauthPayload = {
         username: credentials.username,
@@ -70,6 +62,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
       if (token) {
         console.log('Token extracted:', token.substring(0, 20) + '...');
         localStorage.setItem('authToken', token);
+        storeCredentials(credentials.username, credentials.password);
         onLoginSuccess(token);
       } else {
         console.error('No token found in response:', response.data);
@@ -108,7 +101,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
               name="username"
               value={credentials.username}
               onChange={handleInputChange}
-              placeholder="SMCL-426"
+              placeholder=""
               required
               disabled={isLoading}
             />
@@ -122,7 +115,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
               name="password"
               value={credentials.password}
               onChange={handleInputChange}
-              placeholder="••••••••"
+              placeholder="      "
               required
               disabled={isLoading}
             />
@@ -138,21 +131,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-
-        <div className="demo-section">
-          <label className="demo-checkbox">
-            <input
-              type="checkbox"
-              checked={showDemo}
-              onChange={(e) => setShowDemo(e.target.checked)}
-              disabled={isLoading}
-            />
-            <span>Demo Mode (skip authentication)</span>
-          </label>
-          <p className="demo-note">
-            Enable Demo Mode to test without logging in. Use any username/password combination.
-          </p>
-        </div>
       </div>
     </div>
   );
