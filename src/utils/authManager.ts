@@ -1,13 +1,6 @@
-/**
- * Authentication Manager
- * Handles automatic re-login when token expires
- */
-
 import axios from 'axios';
 
-/**
- * Store credentials temporarily (in sessionStorage for security)
- */
+
 export function storeCredentials(username: string, password: string): void {
   try {
     sessionStorage.setItem('temp_credentials', JSON.stringify({ username, password }));
@@ -17,9 +10,7 @@ export function storeCredentials(username: string, password: string): void {
   }
 }
 
-/**
- * Retrieve stored credentials
- */
+
 export function getStoredCredentials(): { username: string; password: string } | null {
   try {
     const stored = sessionStorage.getItem('temp_credentials');
@@ -30,9 +21,7 @@ export function getStoredCredentials(): { username: string; password: string } |
   }
 }
 
-/**
- * Clear stored credentials
- */
+
 export function clearStoredCredentials(): void {
   try {
     sessionStorage.removeItem('temp_credentials');

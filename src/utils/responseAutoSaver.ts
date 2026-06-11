@@ -1,11 +1,4 @@
-/**
- * Response Auto-Saver Utility
- * Automatically generates and saves API responses as .txt files
- */
 
-/**
- * Format response data into readable text
- */
 export function formatResponseText(data: any, endpoint: string, status: number): string {
   const timestamp = new Date().toISOString();
   const lines = [
@@ -27,9 +20,7 @@ export function formatResponseText(data: any, endpoint: string, status: number):
   return lines.join("\n");
 }
 
-/**
- * Generate filename with current date
- */
+
 export function generateSaveFileName(): string {
   const date = new Date();
   const year = date.getFullYear();
@@ -42,9 +33,7 @@ export function generateSaveFileName(): string {
   return `api-responses-${year}-${month}-${day}-${hours}${minutes}${seconds}.txt`;
 }
 
-/**
- * Download response as .txt file
- */
+
 export function downloadResponseAsFile(
   content: string,
   filename: string = generateSaveFileName()
@@ -69,9 +58,7 @@ export function downloadResponseAsFile(
   }
 }
 
-/**
- * Auto-save response (format + download)
- */
+
 export function autoSaveResponse(
   responseData: any,
   endpoint: string,
@@ -86,9 +73,7 @@ export function autoSaveResponse(
   }
 }
 
-/**
- * Batch save multiple responses to single file
- */
+
 export function batchSaveResponses(
   responses: Array<{
     data: any;

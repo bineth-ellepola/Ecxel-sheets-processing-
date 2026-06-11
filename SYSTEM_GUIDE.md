@@ -430,7 +430,7 @@ Log files automatically capture and store **ALL system activity**. Here's everyt
 ```
 [LOG] 2:45:15 PM - API REQUEST INITIATED
 [LOG] 2:45:15 PM - Endpoint: POST /api/v1/accounttransfers
-[LOG] 2:45:15 PM - Full URL: https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers
+[LOG] 2:45:15 PM - Full URL: https://sejaya.finflux.io/fineract-provider/api/v1/accounttransfers
 [LOG] 2:45:15 PM - Authorization: Bearer 9efa1a51-7fb7-41cb...
 [LOG] 2:45:15 PM - Content-Type: application/json
 [LOG] 2:45:15 PM - Timeout: 60 seconds
@@ -554,7 +554,7 @@ Log files automatically capture and store **ALL system activity**. Here's everyt
 ```
 ============================================================
 BATCH PROCESSING STARTED - 100 rows
-Endpoint: https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers
+Endpoint: https://sejaya.finflux.io/fineract-provider/api/v1/accounttransfers
 Start Time: 2:45:30 PM
 ============================================================
 ```
@@ -567,7 +567,7 @@ Row 1/100 Processing...
   Token: 9efa1a51-7fb7-41c...
 
 Request attempt 1/3:
-  POST https://sejaya-uat.finflux.io/fineract-provider/api/v1/accounttransfers
+  POST https://sejaya.finflux.io/fineract-provider/api/v1/accounttransfers
   Headers: {Authorization: Bearer 9efa1a51...}
   Body: {fromAccountId: "179", ...}
 
